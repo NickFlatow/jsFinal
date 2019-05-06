@@ -1,0 +1,66 @@
+.google-signin-button {
+    color: white;
+    background-color: red;
+    height: 50px;
+    font-size: 16px;
+    border-radius: 10px;
+    padding: 10px 20px 25px 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.topmargin{
+    margin-top: 90px;
+}
+.header{
+
+}
+.navbar {
+    font-family: Algerian;
+    background-color: #050208;
+    border-bottom: 1px solid #dee2e6;
+}
+.medheader{
+    color: #e7823e;
+    font-family: Typewolf;
+}
+.stepsheader{
+    color: #3985C3;
+    font-family: Typewolf;
+}
+input{
+    width: 233px;
+}
+img{
+    float:left;
+}
+
+/*parent, steps and med are for the gaols-modal window */
+.parent {
+    display: flex;
+}
+.steps {
+    width: 50%;
+}
+.stepsbg{
+    background: #3985C3;
+}
+.thick {
+    font-weight: bold;
+}
+.med {
+    /* Grow to rest of parent */
+    flex-shrink: 1;
+    flex-grow: 1;
+}
+.medbg{
+    background: #E7823E;
+}
+body{
+    font-family: Typewolf;
+}
+.alert{
+    text-align:center;
+    /*width:30%;*/
+}
+.action{
+    color: #EE4D65;
+}

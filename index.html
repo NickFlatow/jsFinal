@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>5K trainer</title>
+    <!--google api-->
+    <script src ="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!--style-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+    <link type="text/css" rel="stylesheet" href="css/client.css"/>
+
+    <!--<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">-->
+    <!--<link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">-->
+
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+</head>
+    <div id="app">
+        {{getData}}
+        {{getStepsBucket}}
+        <div>
+
+            <b-navbar class = "navbar" fixed="top">
+                <b-navbar-brand>
+                    <img src="images/logo.png" height="55" width ="200" class="logo">
+                </b-navbar-brand>
+                <div>
+                    <b-button v-if="loggedIn" variant="outline-light">Home</b-button>
+                    <b-button v-if="loggedIn" variant="outline-light" @click="toggleCharts('weeklycharts')">Weekly Charts</b-button>
+                    <b-button v-if="loggedIn" variant="outline-light" @click="toggleCharts('dailycharts')">Daily Charts</b-button>
+                    <b-button v-if="loggedIn" variant="outline-light" @click="toggleCharts('goals')">Schedule</b-button>
+                </div>
+                <goals-modal v-if="loggedIn" :goals="goals"></goals-modal>
+
+                <b-navbar-nav class="ml-auto">
+                    <b-button v-if="loggedIn" @click="prevWeek" variant="outline-light">Prev Week</b-button>
+                    <b-button v-if="loggedIn" v-bind:disabled="weekCounter == 0" @click="nextWeek" variant="outline-light">Next Week</b-button>
+                    <b-button v-if="loggedIn" @click="logout" variant="outline-light">Log Out</b-button>
+                    <b-button v-if="!loggedIn" @click="login" variant="light">Log In</b-button>
+                </b-navbar-nav>
+
+            </b-navbar>
+        </div>
+        <b-container class="topmargin" fluid >
+
+        <div v-if="loggedIn">
+
+            <div v-if="weeklycharts">
+                <div class = "parent">
+                    <div class ="steps">
+                        <h1 class = "stepsheader"><i class="fas fa-shoe-prints"></i>Running</h1>
+                        <chart :activity="weeklySteps" :label="'Miles'" :goals="goals.steps"></chart>
+                    </div>
+                    <hr>
+
+                    <!--<h1 class ="medheader"><i class="fas fa-circle"></i>Meditation</h1>-->
+                    <div class="med">
+                        <h1 class ="medheader"><i class="fas fa-ice-cream"></i>Meditation</h1>
+                        <!--<chart :activity="weeklySteps" :goals="goals.steps"></chart>-->
+                        <chart v-if="weeklySession" :activity="weeklyMed" :label="'Minutes'" :goals="goals.meditations"></chart>
+                    </div>
+                </div>
+            </div>
+
+
+        <div v-if="dailycharts">
+            <life-time-steps :lifetimebucket="lifeBucket"></life-time-steps>
+            <day :weeklysteps="weeklySteps" :goals="goals":day="today"></day>
+        </div>
+        </div>
+        <div v-else>
+            <div id ="log-in">
+                <img src ="images/running.jpg" height="500" width="530" class="mx-3">
+                <div class ="mx-3">
+                    <b-jumbotron>
+                        <p><b>IF YOU HAVE RUN A NUMBER OF RACES AT THE 5K DISTANCE,</b> you probably are not content with merely finishing the race.
+                        You'd like to finish with grace, in style and maybe improve your time. This training schedule will take you all the way to
+                        setting a new personal record.
+                        <br><br>
+                        To set a new Personal Record, you need to improve your endurance and your speed. You can do
+                        this by (1) running more miles,(2)running faster, or(3) some combination of both. In order to achieve the full benefits from this
+                        program, you will probably need to start running 3-4 days a week averaging 15-20 miles weekly.
+                        <br><br>
+                        <span class ="action">Run:</span> When the schedule says "run" that suggest that you run at an easy pace.How fast is easy?
+                        You need to define you own comfort level. Don't worry about how fast you run; just cover the distance
+                        suggested-or approximately the distance. Ideally, you should be able to run at a pace that allows you to
+                        converse with a training partner without getting too much out of breath.
+                        <br><br>
+                        <span class ="action">Tempo Run</span> This is a continuous run with an easy beginning, a build up in the middle near the 10k
+                        race pace, then ease back and cruise to the finish. A typical temp run would begin with 5-10 minutes easy running,
+                        continue with 10-15 faster running, and finish with 5-10 minutes cooling down. You can't figure out your pace on a watch
+                        doing this workout; you need to listen to your body. Tempo runs are very useful for developing your anaerobic threshold, essential for
+                        5k racing.
+                        <br><br>
+                        <span class = "action">Fast</span> We suggest that for several runs you run "fast". How fast is "fast?" Again, that depends on your comfort level.
+                        Go somewhat faster than you would on a "run" day. If you are doing this workout right, you probably do not want to converse with your training partner,
+                        assuming you have one. It's okay now to get out of breath.
+                        <br><br>
+                        <span class ="action">Rest:</span> You can't train hard unless you are well-rested. The schedule includes
+                        two designated days for rest. The easy 3-mile runs scheduled for Tuesday and Thursdays are also to help
+                        you rest for hard workouts on other days
+                        </p>
+                    </b-jumbotron>
+                </div>
+
+
+                <b-alert show>You must be logged in to see your data</b-alert>
+            </div>
+        </div>
+        </b-container>
+        <div v-if="schedule">
+            <goals-table :goals="goals.steps"></goals-table>
+        </div>
+    </div>
+
+<body>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
+
+<!-- Vue Libraries/Plugins -->
+<script src="https://unpkg.com/vue@2.6.8/dist/vue.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src="https://unpkg.com/vue-resource@1.5.1/dist/vue-resource.js"></script>
+<script src="https://unpkg.com/vuefire@2.0.0-alpha.20/dist/vuefire.js"></script><!-- for use with firestore -->
+
+<!--charts-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+
+
+<!-- Vue Application -->
+<!--<script src="js/app-models.js"></script>-->
+<script src="js/app-models.js"></script>
+<script src="js/app-pages.js"></script>
+<script src="js/app-components.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="js/app-session.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
