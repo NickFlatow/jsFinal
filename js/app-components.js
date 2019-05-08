@@ -386,47 +386,41 @@ Vue.component('day',{
 });
 
 Vue.component('life-time-steps', {
-    data: function(){
+    data: function() {
         return {
-            // lifeTimeBucket: [],
-            lifeTimeSteps: 0
+            lifeTimeSteps:0
         }
     },
     props: {
-        lifetimebucket: {
-            type: Array,
+        life: {
+            type:Array,
             required: true
         }
     },
     methods: {
         calculateLifeTimeSteps(steps){
             // console.log("life",this.lifeTimeBucket);
-            let counter = 0;
-            console.log(steps.length);
             for(let i = 0;i < steps.length; i++){
 
-                console.log('test');
-                // if (steps[i].dataset[0].point[0] === undefined){
-                //     // this.lifeTimeSteps
-                //
-                // }else{
-                //     // counter +=
-                //
-                //     // console.log(this.lifeTimeSteps);
-                // }
-                // console.log(steps[i].dataset[0].point[0].value[0].intVal);
+                if (steps[i].dataset[0].point[0] === undefined){
+                    // this.lifeTimeSteps
+
+                }else{
+                    this.lifeTimeSteps += steps[i].dataset[0].point[0].value[0].intVal;
+
+                    console.log(this.lifeTimeSteps);
+                }
+
             }
-            // console.log(counter);
         }
     },
     mounted(){
-        console.log("larg",this.lifetimebucket[0]);
-      // this.getStepsFromGoogle();
-      this.calculateLifeTimeSteps(this.lifetimebucket);
+      this.calculateLifeTimeSteps(this.life);
     },
     template: ''+
     '  <div>\n' +
-    '    <b-progress :value="50" :max="100" show-progress animated></b-progress>\n' +
+    '    <b-progress :value="this.lifeTimeSteps" :max="600000" show-progress animated></b-progress>\n' +
+        '<h1>LifeTime Steps: {{this.lifeTimeSteps}}</h1>' +
     '     <!--<b-progress class="mt-2" :max="max" show-value>-->\n' +
     '     <!--<b-progress-bar :value="50*(6/10)" variant="success"></b-progress-bar>-->\n' +
     '     <!--<b-progress-bar :value="50*(2.5/10)" variant="warning"></b-progress-bar>-->\n' +
@@ -478,7 +472,7 @@ Vue.component('goals-table',{
                   }
 
                   if (day == 0){
-                      newItem[fields[(day+1)]] = (this.goals[day] * mult).toFixed(2) + ' Mi Tempo Run';
+                      newItem[fields[(day+1)]] = (this.goals[day] * mult).toFixed(2) + ' Mi Tempo';
                   }
                   if (day == 1){
                       newItem[fields[(day+1)]] = (this.goals[day] * mult).toFixed(2) + ' Mi Fast';
@@ -541,4 +535,36 @@ Vue.component('goals-table',{
     </div>
     </div>
    `
+});
+
+Vue.component('level-buttons',{
+    props:{
+        // goals:{
+        //     type:Array,
+        //     required: true
+        // }
+    },
+    methods:{
+        novice(){
+            let goals = [3,1,1,0,1,1,0];
+            this.$emit('updategoals',goals);
+        },
+        intermediate(){
+            let goals = [5,3,3,0,3,3,0];
+            this.$emit('updategoals',goals);
+        },
+        expert(){
+            let goals = [8,5,5,0,5,5,0];
+            this.$emit('updategoals',goals);
+        }
+
+    },
+    template:`
+        <div>
+            <b-button @click="novice">Novice</b-button>
+            <b-button @click="intermediate">Intermediate</b-button>
+            <b-button @click="expert">Expert</b-button>
+        </div>
+    `
+
 });

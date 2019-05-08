@@ -69,7 +69,7 @@
 
 
         <div v-if="dailycharts">
-            <life-time-steps :lifetimebucket="lifeBucket"></life-time-steps>
+            <life-time-steps v-if="lifeBucket[0]":life="lifeBucket"></life-time-steps>
             <day :weeklysteps="weeklySteps" :goals="goals":day="today"></day>
         </div>
         </div>
@@ -114,6 +114,7 @@
         </div>
         </b-container>
         <div v-if="schedule">
+            <level-buttons @updategoals="updategoals"></level-buttons>
             <goals-table :goals="goals.steps"></goals-table>
         </div>
     </div>

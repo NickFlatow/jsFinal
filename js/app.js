@@ -17,7 +17,9 @@ var app = new Vue({
 
     },
     methods:{
-
+       updategoals(goals){
+          this.goals.steps = goals;
+        },
         toggleCharts(chart){
             if(chart == "weeklycharts"){
                 this.weeklycharts = true;
@@ -63,9 +65,10 @@ var app = new Vue({
                 //save token to local storage
                 localStorage.setItem('token', response.access_token);
 
+                app.getLifeTimeSteps();
                 app.getData();
                 app.getStepsBucket();
-                app.getLifeTimeSteps();
+
 
             });
         },
@@ -160,7 +163,7 @@ var app = new Vue({
             //
             // console.log('weekCounter ' + this.weekCounter);
             let sunday = new Date("Wed Mar 06,2019 00:00:00");
-            // console.log(sunday);
+
 
             //get last day of the current week
             let saturday = new Date();
@@ -187,7 +190,7 @@ var app = new Vue({
                 },
                 success: function (response) {
                     //add to steps local storage
-                    app.lifeBucket = response.bucket;
+                    app.lifeBucket = new Session(response.bucket);
                 },
                 failure: function(errMsg) {
                     alert(errMsg);
@@ -216,8 +219,7 @@ var app = new Vue({
             let startOfDay = theDay.setHours(0,0,0,0)
             // get end of the day in milliseconds
             let endOfDay = theDay.setHours(23,59,59,999);
-            // console.log("End of day: " + day + " " + endOfDay);
-            // console.log("Start of day: "+ day + " " + startOfDay);
+
             return this.weeklySession.filter(function(item){
                 return item.endTimeMillis < endOfDay && item.startTimeMillis > startOfDay;
             });
@@ -230,8 +232,7 @@ var app = new Vue({
             let startOfDay = theDay.setHours(0,0,0,0)
             // get end of the day in milliseconds
             let endOfDay = theDay.setHours(23,59,59,999);
-            // console.log("End of day: " + day + " " + endOfDay);
-            // console.log("Start of day: "+ day + " " + startOfDay);
+
             return this.weeklySession.filter(function(item){
                 return item.activityType === at && item.endTimeMillis < endOfDay && item.startTimeMillis > startOfDay;
             });
@@ -275,9 +276,6 @@ var app = new Vue({
                     return mins
                 }, 0));
             }
-            //
-            // console.log(blarg);
-            // console.log(medMins);
             return weeklyMedMins;
         },
     },
@@ -343,7 +341,7 @@ var app = new Vue({
     watch:{
         weekCounter: function(){
             this.getStepsBucket();
-            console.log(this.stepsBucket);
+
         }
     }
 });
