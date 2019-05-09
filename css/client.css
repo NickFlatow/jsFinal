@@ -32,6 +32,33 @@ input{
 img{
     float:left;
 }
+/*style for daily charts*/
+
+.box{
+    margin:auto;
+    width:100px;
+    height:100px;
+}
+.startbox{
+    width:10px;
+    height:10px;
+}
+.endbox{
+    float:right;
+    width:15px;
+    height:15px;
+}
+.green{
+    color:#0f0;
+}
+.alignment{
+    display: flex;
+    align-items: center;
+}
+
+
+
+
 
 /*parent, steps and med are for the gaols-modal window */
 .parent {

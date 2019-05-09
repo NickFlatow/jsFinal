@@ -388,7 +388,13 @@ Vue.component('day',{
 Vue.component('life-time-steps', {
     data: function() {
         return {
-            lifeTimeSteps:0
+            miles: 0,
+            currentLevelColor: '#07ffd8',
+            nextLevelColor: '#ffd926',
+            nextLevelMiles: 0,
+            levelTwo: 300,
+            levelThree: 400,
+            currentLevel: 0
         }
     },
     props: {
@@ -403,24 +409,58 @@ Vue.component('life-time-steps', {
             for(let i = 0;i < steps.length; i++){
 
                 if (steps[i].dataset[0].point[0] === undefined){
-                    // this.lifeTimeSteps
-
+                    //do nothing
                 }else{
-                    this.lifeTimeSteps += steps[i].dataset[0].point[0].value[0].intVal;
+                    this.miles += (steps[i].dataset[0].point[0].value[0].intVal/2130);
 
-                    console.log(this.lifeTimeSteps);
                 }
-
             }
+            // this.miles += 30;
+        },
+        getLevel(){
+            var miles = this.miles;
+            console.log("miles",miles);
+            switch(true){
+                case miles < 50:
+                    this.currentLevelColor = '#2011FF';
+                    this.nextLevelColor = '#0f0';
+                    this.nextLevelMiles = 150;
+                case miles >= 200 && miles < 300:
+                    this.currentLevel = this.levelTwo;
+                    this.nextLevelMiles = 200;
+                    this.currentLevelColor = '#ffd926';
+                    this.nextLevelColor = '#FF1A23';
+                    // localStorage.setItem('nextLevelColor','#FF1A23');
+                    // this.nextLevelColor = localStorage.getItem('nextLevelColor');
+                    break;
+                case miles >= 300 && miles < 400:
+                    this.currentLevel = this.levelThree;
+                    this.nextLevelMiles = 300;
+                    this.currentLevelColor = '#FF1A23';
+                    this.nextLevelColor = '#FF20F0';
+
+                    // localStorage.setItem('nextLevelColor','#FF20F0');
+                    // this.nextLevelColor = localStorage.getItem('nextLevelColor');
+                    // console.log(this.currentLevelColor);
+                    break;
+                default:
+                    console.log('failure');
+                    break;
+            }
+
         }
     },
     mounted(){
       this.calculateLifeTimeSteps(this.life);
+      this.getLevel();
     },
     template: ''+
-    '  <div>\n' +
-    '    <b-progress :value="this.lifeTimeSteps" :max="600000" show-progress animated></b-progress>\n' +
-        '<h1>LifeTime Steps: {{this.lifeTimeSteps}}</h1>' +
+    '  <div>' +
+        '<div align="center"> <h1 :style="{color: currentLevelColor}"><i class="fas fa-blender"></i></h1></div>' +
+        '<div v-bind:style="{backgroundColor: nextLevelColor}"  class="endbox"></div>' +
+        '<b-progress :value="this.miles - this.nextLevelMiles" :max="100" show-progress animated></b-progress>\n' +
+        '<h1>Total Miles: {{(this.miles).toFixed(2)}}</h1>' +
+        '<h1>Next Miles: {{(this.nextLevelMiles).toFixed(2)}}</h1>' +
     '     <!--<b-progress class="mt-2" :max="max" show-value>-->\n' +
     '     <!--<b-progress-bar :value="50*(6/10)" variant="success"></b-progress-bar>-->\n' +
     '     <!--<b-progress-bar :value="50*(2.5/10)" variant="warning"></b-progress-bar>-->\n' +
@@ -538,12 +578,6 @@ Vue.component('goals-table',{
 });
 
 Vue.component('level-buttons',{
-    props:{
-        // goals:{
-        //     type:Array,
-        //     required: true
-        // }
-    },
     methods:{
         novice(){
             let goals = [3,1,1,0,1,1,0];

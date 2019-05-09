@@ -65,6 +65,7 @@
                         <chart v-if="weeklySession" :activity="weeklyMed" :label="'Minutes'" :goals="goals.meditations"></chart>
                     </div>
                 </div>
+                <level-buttons @updategoals="updategoals"></level-buttons>
             </div>
 
 
