@@ -30,7 +30,7 @@
                     <img src="images/logo.png" height="55" width ="200" class="logo">
                 </b-navbar-brand>
                 <div>
-                    <b-button v-if="loggedIn" variant="outline-light">Home</b-button>
+                    <b-button v-if="loggedIn" variant="outline-light" @click="toggleCharts('life')">Life</b-button>
                     <b-button v-if="loggedIn" variant="outline-light" @click="toggleCharts('weeklycharts')">Weekly Charts</b-button>
                     <b-button v-if="loggedIn" variant="outline-light" @click="toggleCharts('dailycharts')">Daily Charts</b-button>
                     <b-button v-if="loggedIn" variant="outline-light" @click="toggleCharts('goals')">Schedule</b-button>
@@ -65,12 +65,11 @@
                         <chart v-if="weeklySession" :activity="weeklyMed" :label="'Minutes'" :goals="goals.meditations"></chart>
                     </div>
                 </div>
-                <level-buttons @updategoals="updategoals"></level-buttons>
+                <level-buttons align="center" @updategoals="updategoals"></level-buttons>
             </div>
 
 
         <div v-if="dailycharts">
-            <life-time-steps v-if="lifeBucket[0]":life="lifeBucket"></life-time-steps>
             <day :weeklysteps="weeklySteps" :goals="goals":day="today"></day>
         </div>
         </div>
@@ -115,8 +114,14 @@
         </div>
         </b-container>
         <div v-if="schedule">
-            <level-buttons @updategoals="updategoals"></level-buttons>
+            <level-buttons align="center" @updategoals="updategoals"></level-buttons>
             <goals-table :goals="goals.steps"></goals-table>
+        </div>
+
+        <div v-if="life">
+            <b-jumbotron bg-variant="info">
+                <life-time-steps v-if="lifeBucket[0]":life="lifeBucket"></life-time-steps>
+            </b-jumbotron>
         </div>
     </div>
 

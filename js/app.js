@@ -13,7 +13,8 @@ var app = new Vue({
         //pages
         weeklycharts: false,
         dailycharts:true,
-        schedule: false
+        schedule: false,
+        life:false
 
     },
     methods:{
@@ -25,16 +26,25 @@ var app = new Vue({
                 this.weeklycharts = true;
                 this.dailycharts = false;
                 this.schedule = false;
+                this.life = false;
             }
             if(chart == "dailycharts"){
                 this.dailycharts = true;
                 this.weeklycharts = false;
                 this.schedule = false;
+                this.life = false;
             }
             if(chart == "goals"){
                 this.dailycharts = false;
                 this.weeklycharts = false;
                 this.schedule = true;
+                this.life = false;
+            }
+            if(chart == "life"){
+                this.dailycharts = false;
+                this.weeklycharts = false;
+                this.schedule = false;
+                this.life = true;
             }
         },
         prevWeek(){
